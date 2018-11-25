@@ -228,8 +228,12 @@ colocMolecularQTLs <- function(qtl_df, qtl_summary_path, gwas_summary_path,
 #' @param ... Additional parameters passed on to colocMolecularQTLs function
 #'
 #' @export
-colocMolecularQTLsByRow <- function(qtl_df, ...){
-  result = purrrlyr::by_row(qtl_df, ~colocMolecularQTLs(.,...)$summary, .collate = "rows")
+colocMolecularQTLsByRow <- function(qtl_df, qtl_summary_path, gwas_summary_path,
+                                    gwas_variant_info, qtl_variant_info,
+                                    N_qtl, cis_dist, QTLTools = TRUE){
+  result = purrrlyr::by_row(qtl_df, ~colocMolecularQTLs(., qtl_summary_path, gwas_summary_path,
+                                                        gwas_variant_info, qtl_variant_info,
+                                                        N_qtl, cis_dist, QTLTools)$summary, .collate = "rows")
 }
 
 #' Perform a quick pre-filtering between QTLs and GWAS hits to reduce the number of coloc tests
