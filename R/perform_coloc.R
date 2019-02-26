@@ -249,7 +249,7 @@ colocMolecularQTLsByRow <- function(qtl_df, qtl_summary_path, gwas_summary_path,
 #' @return List of data.frames with phenotype_ids and snp_ids to be tested with coloc.
 #' @export
 prefilterColocCandidates <- function(qtl_min_pvalues, gwas_prefix, gwas_variant_info,
-                                     fdr_thresh = 0.1, overlap_dist = 1e5, gwas_thresh = 1e-5){
+                                     fdr_thresh = 0.1, overlap_dist = 1e5, gwas_thresh = 1e-5, top_hits_suffix = ".top_hits.GRCh38.txt.gz"){
 
   #Make sure that the qtl_df has neccessary columns
   assertthat::assert_that(assertthat::has_name(qtl_min_pvalues[[1]], "phenotype_id"))
@@ -259,7 +259,7 @@ prefilterColocCandidates <- function(qtl_min_pvalues, gwas_prefix, gwas_variant_
 
 
   #Import top GWAS p-values
-  gwas_pvals = importGWASSummary(paste0(gwas_prefix,".top_hits.txt.gz")) %>%
+  gwas_pvals = importGWASSummary(paste0(gwas_prefix, top_hits_suffix)) %>%
     dplyr::filter(p_nominal < gwas_thresh) %>%
     dplyr::transmute(chr = chr, gwas_pos = pos)
 
@@ -290,11 +290,27 @@ constructQtlListForColoc <- function(phenotype, qtl_root, sample_size_list){
   #Iterate over conditions and fill lists
   for(condition in conditions){
     min_pvalue_path = file.path(qtl_root, phenotype, paste0(condition, ".permuted.txt.gz"))
-    summary_path = file.path(qtl_root, phenotype, "sorted", paste0(condition, ".nominal.sorted.txt.gz"))
+    summary_path = file.path(qtl_root, phenotype, paste0(condition, ".nominal.sorted.txt.gz"))
 
     min_pvalues[[condition]] = importQTLtoolsTable(min_pvalue_path) %>% dplyr::select(phenotype_id, snp_id, p_fdr)
     qtl_summary_list[[condition]] = summary_path
   }
+  return(list(min_pvalues = min_pvalues, qtl_summary_list = qtl_summary_list, sample_sizes = sample_size_list))
+}
+
+constructQtlmapListForColoc <- function(lead_path, summary_path, sample_size){
+  #Import min pvalues
+  min_pvalues = list()
+  min_pvalues[["qtl_group"]] = importQTLtoolsTable(lead_path) %>% dplyr::select(phenotype_id, snp_id, p_fdr)
+
+  #Set summary path
+  qtl_summary_list = list()
+  qtl_summary_list[["qtl_group"]] = summary_path
+
+  #Sample size list
+  sample_size_list = list()
+  sample_size_list[["qtl_group"]] = sample_size
+
   return(list(min_pvalues = min_pvalues, qtl_summary_list = qtl_summary_list, sample_sizes = sample_size_list))
 }
 
