@@ -72,7 +72,7 @@ qtl_pairs = purrr::map_df(qtl_df_list, identity) %>% unique()
 print("Pre-filtering completed.")
 
 #Test for coloc
-coloc_res_list = purrr::map2(phenotype_values$qtl_summary_list, phenotype_values$sample_sizes,
+coloc_res_list = purrr::map2(qtl_list$qtl_summary_list, qtl_list$sample_sizes,
                              ~colocWrapper::colocMolecularQTLsByRow(qtl_pairs, qtl_summary_path = .x,
                                                       gwas_summary_path = paste0(gwas_prefix, ".sorted.GRCh38.txt.gz"),
                                                       gwas_variant_info = qtl_var_info,
