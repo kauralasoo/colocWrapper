@@ -48,7 +48,7 @@ qtl_var_path = opt$qtlvarinfo
 gwas_list = opt$gwaslist
 
 #Import variant information
-qtl_var_info = colocWrapper::importVariantInformation(gwas_var_path)
+qtl_var_info = colocWrapper::importVariantInformation(qtl_var_path)
 print("Variant information imported.")
 
 #Extract sample size from variant info
