@@ -5,7 +5,8 @@
 \title{Perform a quick pre-filtering between QTLs and GWAS hits to reduce the number of coloc tests}
 \usage{
 prefilterColocCandidates(qtl_min_pvalues, gwas_prefix, gwas_variant_info,
-  fdr_thresh = 0.1, overlap_dist = 1e+05, gwas_thresh = 1e-05)
+  fdr_thresh = 0.1, overlap_dist = 1e+05, gwas_thresh = 1e-05,
+  top_hits_suffix = ".top_hits.GRCh38.txt.gz")
 }
 \arguments{
 \item{qtl_min_pvalues}{List of data frames with QTL lead pvalues. Each data frame must contain

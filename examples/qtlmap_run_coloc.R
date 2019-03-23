@@ -29,13 +29,7 @@ option_list <- list(
 opt <- parse_args(OptionParser(option_list=option_list))
 
 #Debugging
-#opt = list(gwas = "RA", w = "2e5",
-#           l = "~/projects/RNAseq_pipeline/results/qtl_summary_stats/Fairfax_2014/array/monocyte_LPS2.permuted.txt.gz",
-#           d = "~/datasets/GWAS_GRCh38/",
-#           o = "results/monocyte_LPS2.coloc_results.txt",
-#           qtl = "~/projects/RNAseq_pipeline/results/qtl_summary_stats/Fairfax_2014/array/monocyte_LPS2.nominal.sorted.txt.gz",
-#           qtlvarinfo = "~/projects/RNAseq_pipeline/results/qtl_summary_stats/Fairfax_2014/array/monocyte_LPS2.variant_information.txt.gz",
-#           gwaslist = "~/projects/macrophage-trQTLs/analysis/data/gwas/GWAS_summary_stat_list.labeled.txt")
+docu
 
 #Extract parameters for CMD options
 gwas_id = opt$gwas
@@ -85,6 +79,3 @@ coloc_hits = purrr::map_df(coloc_res_list, identity) %>%
   dplyr::arrange(-PP.H4.abf) %>%
   dplyr::mutate(gwas_trait = gwas_id)
 write.table(coloc_hits, outfile, sep = "\t", quote = FALSE, row.names = FALSE)
-
-#Debugging example
-#colocMolecularQTLs(qtl_pairs[1,], phenotype_values$qtl_summary_list$naive, gwas_summary_path = paste0(gwas_prefix, ".sorted.txt.gz"), qtl_var_info, qtl_var_info, N_qtl = 84, cis_dist = 2e5)
