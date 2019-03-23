@@ -5,7 +5,7 @@ library("coloc")
 library("readr")
 library("devtools")
 library("optparse")
-load_all("../colocWrapper")
+devtools::load_all("colocWrapper/")
 
 #Parse command-line options
 option_list <- list(
