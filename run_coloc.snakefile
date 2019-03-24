@@ -19,10 +19,11 @@ rule run_coloc:
 	output:
 		"results/coloc/{qtl_set}.{gwas_trait}.txt"
 	resources:
-		mem = 6000
+		mem = 18000
 	threads: 1
+	singularity:
+		"docker://kauralasoo/coloc-wrapper:latest"
 	shell:
 		"""
-		module load R/3.5.1
 		Rscript qtlmap_run_coloc.R -l {input.lead_vars} -w {config[coloc_window]} --gwas {wildcards.gwas_trait} -d {config[gwas_dir]} -o {output} --qtl {input.summary_stats} --qtlvarinfo {input.var_info} --gwaslist {config[gwas_list]}
 		"""
