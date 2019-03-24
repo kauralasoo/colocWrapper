@@ -29,7 +29,13 @@ option_list <- list(
 opt <- parse_args(OptionParser(option_list=option_list))
 
 #Debugging
-docu
+# opt = list(gwas = "RA", w = "2e5",
+#           l = "~/projects/RNAseq_pipeline/results/qtl_summary_stats/Fairfax_2014/array/monocyte_LPS2.permuted.txt.gz",
+#           d = "~/datasets/GWAS_GRCh38/",
+#           o = "results/monocyte_LPS2.coloc_results.txt",
+#           qtl = "~/projects/RNAseq_pipeline/results/qtl_summary_stats/Fairfax_2014/array/monocyte_LPS2.nominal.sorted.txt.gz",
+#           qtlvarinfo = "~/projects/RNAseq_pipeline/results/qtl_summary_stats/Fairfax_2014/array/monocyte_LPS2.variant_information.txt.gz",
+#           gwaslist = "~/projects/macrophage-trQTLs/analysis/data/gwas/GWAS_summary_stat_list.labeled.txt")
 
 #Extract parameters for CMD options
 gwas_id = opt$gwas

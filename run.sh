@@ -5,4 +5,4 @@ sudo docker build -t kauralasoo/coloc-wrapper .
 docker push kauralasoo/coloc-wrapper
 
 ### Run coloc all QTLs agains all GWAS traits
-snakemake --use-singularity --cluster scripts/snakemake_submit_UT.py -np -s run_coloc.snakefile results/coloc/coloc_out.txt --jobs 300 --configfile configs/coloc_config.yaml --rerun-incomplete
+snakemake --use-singularity --cluster scripts/snakemake_submit_UT.py -np -s run_coloc.snakefile results/coloc/coloc_out.txt --jobs 300 --configfile config/coloc_config.yaml --rerun-incomplete
