@@ -22,7 +22,7 @@ rule run_coloc:
 		mem = 18000
 	threads: 1
 	singularity:
-		"docker://kauralasoo/coloc-wrapper:latest"
+		"./coloc-wrapper.img"
 	shell:
 		"""
 		Rscript qtlmap_run_coloc.R -l {input.lead_vars} -w {config[coloc_window]} --gwas {wildcards.gwas_trait} -d {config[gwas_dir]} -o {output} --qtl {input.summary_stats} --qtlvarinfo {input.var_info} --gwaslist {config[gwas_list]}
