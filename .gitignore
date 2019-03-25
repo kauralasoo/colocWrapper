@@ -3,3 +3,7 @@
 .RData
 .DS_Store
 colocWrapper.Rproj
+coloc-wrapper.img
+SlurmOut
+.snakemake
+results
