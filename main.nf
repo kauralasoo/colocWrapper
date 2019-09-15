@@ -10,7 +10,7 @@ process index_gwas_catalog_sumstats{
     file(sumstats) from sumstats_channel
 
     output:
-    set file("${sumstats.simpleName}.tsv.gz"), file("${sumstats.simpleName}.tsv.gz.tbi") to indexed_sumstats
+    set file("${sumstats.simpleName}.tsv.gz"), file("${sumstats.simpleName}.tsv.gz.tbi") into indexed_sumstats
 
     script:
     """
