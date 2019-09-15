@@ -35,6 +35,22 @@ importGWASSummary <- function(summary_path){
   return(gwas_pvals)
 }
 
+#' Import GWAS Catalog summary stats
+importGWASCatalogSummary <- function(summary_path){
+  gwas_col_names = c("hm_variant_id","hm_rsid","hm_chrom","hm_pos","hm_other_allele","hm_effect_allele","hm_beta",
+                "hm_odds_ratio","hm_ci_lower","hm_ci_upper","hm_effect_allele_frequency",
+                "hm_code","variant","variant_id","chromosome","base_pair_location",
+                "other_allele","effect_allele","alt_minor","direction","beta",
+                "standard_error","p_value","mlog10p","effect_allele_frequency",
+                "ma_freq","ci_lower","ci_upper","odds_ratio")
+  gwas_pvals = readr::read_tsv(summary_path, col_names = gwas_col_names) %>%
+    dplyr::transmute(variant_id = hm_variant_id, chromosome = hm_chrom, pos = hm_pos,
+                     beta = hm_beta, OR = hm_odds_ratio, se = standard_error,
+                     effect_AF = hm_effect_allele_frequency, rsid = hm_rsid) %>%
+    dplyr::mutate(MAF = pmin(effect_AF, 1-effect_AF), log_OR = log(OR))
+  return(gwas_pvals)
+}
+
 
 #' A general function to quickly import tabix indexed tab-separated files into data_frame
 #'
