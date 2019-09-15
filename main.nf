@@ -10,11 +10,11 @@ process index_gwas_catalog_sumstats{
     file(sumstats) from sumstats_channel
 
     output:
-    set file("${sumstats.baseName}.tsv.gz"), file("${sumstats.baseName}.tsv.gz.tbi") to indexed_sumstats
+    set file("${sumstats.simpleName}.tsv.gz"), file("${sumstats.simpleName}.tsv.gz.tbi") to indexed_sumstats
 
     script:
     """
-    zcat ${sumstats} | tail -n+2 | awk '{if($3 != "NA") print $0}' | LANG=C sort -k3,3 -k4,4n | bgzip > ${sumstats.baseName}.tsv.gz
-    tabix -b4 -e4 -s3 ${sumstats.baseName}.tsv.gz
+    zcat ${sumstats} | tail -n+2 | awk '{if(\$3 != "NA") print \$0}' | LANG=C sort -k3,3 -k4,4n | bgzip > ${sumstats.simpleName}.tsv.gz
+    tabix -b4 -e4 -s3 ${sumstats.simpleName}.tsv.gz
     """
 }
