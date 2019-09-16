@@ -157,13 +157,13 @@ summaryReplaceSnpId <- function(summary_df, variant_information){
 #' lifting over the GWAS summary statstitics, it's sufficient to have a different version of the variant infromation file.
 #' @param N_qtl Sample size for QTL mapping. Used by coloc to estimate the the standard errors from p-values and effect sizes.
 #' @param cis_dist With of the genomic region around the lead QTL variant that is used for colocalisation; width = 2*cis_dist.
-#' @param QTLTools Set to TRUE if QTL mapping was performed using QTLtools.
+#' @param gwas_type type of GWAS summary stats used for coloc.
 #'
 #' @return List of colocalisation results or NULL values if there was an error.
 #' @export
 colocMolecularQTLs <- function(qtl_df, qtl_summary_path, gwas_summary_path,
                                gwas_variant_info, qtl_variant_info,
-                               N_qtl = 84, cis_dist = 1e5, QTLTools = TRUE){
+                               N_qtl = 84, cis_dist = 1e5, gwas_type){
 
   #Assertions
   assertthat::assert_that(assertthat::has_name(qtl_df, "phenotype_id"))
@@ -182,15 +182,11 @@ colocMolecularQTLs <- function(qtl_df, qtl_summary_path, gwas_summary_path,
     gwas_ranges = constructVariantRanges(qtl_df, gwas_variant_info, cis_dist = cis_dist)
 
     #Fetch QTL summary stats
-    if(QTLTools){
-      qtl_summaries = qtltoolsTabixFetchPhenotypes(qtl_ranges, qtl_summary_path)[[1]] %>%
-        dplyr::transmute(snp_id, chr = snp_chr, pos = snp_start, p_nominal, beta)
-    } else{
-      qtl_summaries = fastqtlTabixFetchGenes(qtl_ranges, qtl_summary_path)[[1]]
-    }
+    qtl_summaries = qtltoolsTabixFetchPhenotypes(qtl_ranges, qtl_summary_path)[[1]] %>%
+      dplyr::transmute(snp_id, chr = snp_chr, pos = snp_start, p_nominal, beta)
 
     #Fetch GWAS summary stats
-    gwas_summaries = tabixFetchGWASSummary(gwas_ranges, gwas_summary_path)[[1]]
+    gwas_summaries = tabixFetchGWAS(gwas_ranges, gwas_summary_path, type)[[1]]
 
     #Substitute coordinate for the eqtl summary stats and add MAF
     qtl = summaryReplaceCoordinates(qtl_summaries, gwas_variant_info)
