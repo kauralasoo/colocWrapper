@@ -7,3 +7,4 @@ coloc-wrapper.img
 SlurmOut
 .snakemake
 results
+testdata

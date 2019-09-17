@@ -16,14 +16,6 @@ importVariantInformation <- function(path){
   return(snp_info)
 }
 
-#' Import a specific region from a tabix-indexed GWAS summary stats file
-tabixFetchGWASSummary <- function(granges, summary_path){
-  gwas_col_names = c("snp_id", "chr", "pos", "effect_allele", "MAF",
-                     "p_nominal", "beta", "OR", "log_OR", "se", "z_score", "trait", "PMID", "used_file")
-  gwas_col_types = c("ccicdddddddccc")
-  gwas_pvalues = scanTabixDataFrame(summary_path, granges, col_names = gwas_col_names, col_types = gwas_col_types)
-  return(gwas_pvalues)
-}
 
 #' Import full GWAS summary stats file
 importGWASSummary <- function(summary_path){
@@ -44,11 +36,23 @@ importGWASCatalogSummary <- function(summary_path){
                 "standard_error","p_value","mlog10p","effect_allele_frequency",
                 "ma_freq","ci_lower","ci_upper","odds_ratio")
   gwas_pvals = readr::read_tsv(summary_path, col_names = gwas_col_names) %>%
-    dplyr::transmute(variant_id = hm_variant_id, chromosome = hm_chrom, pos = hm_pos,
+    dplyr::transmute(snp_id = hm_variant_id, chr = as.character(hm_chrom), pos = hm_pos,
                      beta = hm_beta, OR = hm_odds_ratio, se = standard_error,
-                     effect_AF = hm_effect_allele_frequency, rsid = hm_rsid) %>%
+                     effect_AF = hm_effect_allele_frequency, rsid = hm_rsid, p_nominal = p_value) %>%
     dplyr::mutate(MAF = pmin(effect_AF, 1-effect_AF), log_OR = log(OR))
   return(gwas_pvals)
+}
+
+importGWAS <- function(summary_path, gwas_type = "GWASCatalog"){
+  assertthat::assert_that(gwas_type %in% c("GWASCatalog", "Alasoo_2018"))
+
+  if(gwas_type == "GWASCatalog"){
+    result = importGWASCatalogSummary(summary_path)
+    return(result)
+  } else if (gwas_type == "Alasoo_2018"){
+    result = importGWASSummary(summary_path)
+    return(result)
+  }
 }
 
 #' Import a specific region from a tabix-indexed GWAS summary stats file
@@ -59,21 +63,31 @@ tabixFetchGWASCatalogSummary <- function(granges, summary_path){
                      "other_allele","effect_allele","alt_minor","direction","beta",
                      "standard_error","p_value","mlog10p","effect_allele_frequency",
                      "ma_freq","ci_lower","ci_upper","odds_ratio")
-  gwas_pvalues = scanTabixDataFrame(summary_path, granges, col_names = gwas_col_names) %>%
-    dplyr::transmute(variant_id = hm_variant_id, chromosome = hm_chrom, pos = hm_pos,
+  gwas_pvalues_list = scanTabixDataFrame(summary_path, granges, col_names = gwas_col_names)
+  gwas_pvalues = purrr::map(gwas_pvalues_list, ~dplyr::transmute(.,snp_id = hm_variant_id,
+                     chr = as.character(hm_chrom), pos = hm_pos,
                      beta = hm_beta, OR = hm_odds_ratio, se = standard_error,
-                     effect_AF = hm_effect_allele_frequency, rsid = hm_rsid) %>%
-    dplyr::mutate(MAF = pmin(effect_AF, 1-effect_AF), log_OR = log(OR))
+                     effect_AF = hm_effect_allele_frequency, rsid = hm_rsid, p_nominal = p_value) %>%
+    dplyr::mutate(MAF = pmin(effect_AF, 1-effect_AF), log_OR = log(OR)))
+  return(gwas_pvalues)
+}
+
+#' Import a specific region from a tabix-indexed GWAS summary stats file
+tabixFetchGWASSummary <- function(granges, summary_path){
+  gwas_col_names = c("snp_id", "chr", "pos", "effect_allele", "MAF",
+                     "p_nominal", "beta", "OR", "log_OR", "se", "z_score", "trait", "PMID", "used_file")
+  gwas_col_types = c("ccicdddddddccc")
+  gwas_pvalues = scanTabixDataFrame(summary_path, granges, col_names = gwas_col_names, col_types = gwas_col_types)
   return(gwas_pvalues)
 }
 
 tabixFetchGWAS <- function(granges, summary_path, gwas_type = "GWASCatalog"){
-  assertthat::assert_that(type %in% c("GWASCatalog", "Alasoo_2018"))
+  assertthat::assert_that(gwas_type %in% c("GWASCatalog", "Alasoo_2018"))
 
-  if(type == "GWASCatalog"){
+  if(gwas_type == "GWASCatalog"){
     result = tabixFetchGWASCatalogSummary(granges, summary_path)
     return(result)
-  } else if (type == "Alasoo_2018"){
+  } else if (gwas_type == "Alasoo_2018"){
     result = tabixFetchGWASSummary(granges, summary_path)
     return(result)
   }

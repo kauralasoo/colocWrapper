@@ -5,7 +5,7 @@
 \title{Applies the colocMolecularQTLs function to each row of the qtl_df data frame.}
 \usage{
 colocMolecularQTLsByRow(qtl_df, qtl_summary_path, gwas_summary_path,
-  gwas_variant_info, qtl_variant_info, N_qtl, cis_dist, QTLTools = TRUE)
+  variant_info, N_qtl, cis_dist, gwas_type)
 }
 \arguments{
 \item{qtl_df}{Data frame of QTLs}

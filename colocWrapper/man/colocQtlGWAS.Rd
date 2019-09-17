@@ -4,7 +4,7 @@
 \alias{colocQtlGWAS}
 \title{Test colocalisation between molecular QTL and GWAS summary stats}
 \usage{
-colocQtlGWAS(qtl, gwas, N_qtl)
+colocQtlGWAS(qtl, gwas, N_qtl, p1 = 1e-04, p2 = 1e-04, p12 = 1e-05)
 }
 \arguments{
 \item{qtl}{QTL summary stats (p_nominal, MAF, beta, snp_id)}

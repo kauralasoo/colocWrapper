@@ -4,23 +4,20 @@
 \alias{prefilterColocCandidates}
 \title{Perform a quick pre-filtering between QTLs and GWAS hits to reduce the number of coloc tests}
 \usage{
-prefilterColocCandidates(qtl_min_pvalues, gwas_prefix, gwas_variant_info,
-  fdr_thresh = 0.1, overlap_dist = 1e+05, gwas_thresh = 1e-05,
-  top_hits_suffix = ".top_hits.GRCh38.txt.gz")
+prefilterColocCandidates(qtl_min_pvalues, gwas_leads_path, variant_info,
+  fdr_thresh = 0.1, overlap_dist = 1e+05, gwas_type)
 }
 \arguments{
 \item{qtl_min_pvalues}{List of data frames with QTL lead pvalues. Each data frame must contain
 gene_id, snp_id and p_fdr and should not contain other columns.}
 
-\item{gwas_prefix}{Prefix of the GWAS summarystats file}
+\item{gwas_leads_path}{Prefix of the GWAS summarystats file}
 
-\item{gwas_variant_info}{QTL variant information in GWAS coordinates.}
+\item{variant_info}{QTL variant information in GWAS coordinates.}
 
 \item{fdr_thresh}{Minimal QTL FDR threshold}
 
 \item{overlap_dist}{Max distance between GWAS and QTL variants.}
-
-\item{gwas_thresh}{Minimal GWAS p-value threshold}
 }
 \value{
 List of data.frames with phenotype_ids and snp_ids to be tested with coloc.
