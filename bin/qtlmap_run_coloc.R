@@ -31,14 +31,14 @@ opt <- parse_args(OptionParser(option_list=option_list))
 
 #Debugging
 if(FALSE){
-  opt = list(qtl_leads = "testdata/platelet.permuted.txt.gz",
-             qtl_stats = "testdata/platelet.nominal.sorted.txt.gz",
+  opt = list(qtl_leads = "test_data/platelet.permuted.txt.gz",
+             qtl_stats = "test_data/platelet.nominal.sorted.txt.gz",
              cis_window = 200000,
-             gwas_leads = "testdata/27863252-GCST004599-EFO_0004584.top_hits.tsv.gz",
-             gwas_stats = "testdata/27863252-GCST004599-EFO_0004584.tsv.gz",
-             qtl_varinfo = "testdata/platelet.variant_information.txt.gz",
+             gwas_leads = "test_data/Inflammatory_bowel_disease_UC_Liu_2015_NatGen_Immunochip.top_hits.GRCh38.txt.gz",
+             gwas_stats = "test_data/Inflammatory_bowel_disease_UC_Liu_2015_NatGen_Immunochip.sorted.GRCh38.txt.gz",
+             qtl_varinfo = "test_data/platelet.variant_information.txt.gz",
              out = "colocalised_hits.txt",
-             gwas_type = "GWASCatalog",
+             gwas_type = "Alasoo_2018",
              pkg_path = "colocWrapper/")
 }
 
@@ -85,7 +85,7 @@ write.table(coloc_hits, outfile, sep = "\t", quote = FALSE, row.names = FALSE)
 
 #Debugging
 if(FALSE){
-  colocMolecularQTLs(qtl_pairs, qtl_list$qtl_summary_list$qtl_group, gwas_summary_path = opt$gwas_stats,
+  colocMolecularQTLs(qtl_pairs[1,], qtl_list$qtl_summary_list$qtl_group, gwas_summary_path = opt$gwas_stats,
                      variant_info = varinfo_df, N_qtl = qtl_list$sample_sizes$qtl_group, cis_dist = cis_window,
                      gwas_type = opt$gwas_type)
 }

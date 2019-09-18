@@ -79,7 +79,7 @@ colocQtlGWAS <- function(qtl, gwas, N_qtl, p1 = 1e-04, p2 = 1e-04, p12 = 1e-05){
     coloc_res = coloc::coloc.abf(dataset1 = list(pvalues = qtl$p_nominal,
                                                  N = N_qtl,
                                                  MAF = qtl$MAF,
-                                                 type = "cc",
+                                                 type = "quant",
                                                  beta = qtl$beta,
                                                  snp = qtl$snp_id),
                                  dataset2 = list(beta = gwas$log_OR,
