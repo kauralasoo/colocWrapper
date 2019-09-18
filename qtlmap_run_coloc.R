@@ -29,64 +29,59 @@ option_list <- list(
 opt <- parse_args(OptionParser(option_list=option_list))
 
 #Debugging
-opt = list(qtl_leads = "testdata/platelet.permuted.txt.gz",
-            qtl_stats = "testdata/platelet.nominal.sorted.txt.gz",
-            cis_window = 200000,
-            gwas_leads = "testdata/27863252-GCST004599-EFO_0004584.top_hits.tsv.gz",
-            gwas_stats = "testdata/27863252-GCST004599-EFO_0004584.tsv.gz",
-            qtl_varinfo = "testdata/platelet.variant_information.txt.gz",
-            out = "colocalised_hits.txt",
-            gwas_type = "GWASCatalog")
+if(FALSE){
+  opt = list(qtl_leads = "testdata/platelet.permuted.txt.gz",
+             qtl_stats = "testdata/platelet.nominal.sorted.txt.gz",
+             cis_window = 200000,
+             gwas_leads = "testdata/27863252-GCST004599-EFO_0004584.top_hits.tsv.gz",
+             gwas_stats = "testdata/27863252-GCST004599-EFO_0004584.tsv.gz",
+             qtl_varinfo = "testdata/platelet.variant_information.txt.gz",
+             out = "colocalised_hits.txt",
+             gwas_type = "GWASCatalog")
+}
+
 
 #Extract parameters for CMD options
 cis_window = as.numeric(opt$cis_window)
-lead_vars = opt$qtl_leads
-summary_path = opt$qtl_stats
 outfile = opt$out
-qtl_var_path = opt$qtl_varinfo
+gwas_id = basename(opt$gwas_stats) %>%
+  sub('\\.tsv.gz$', '', .)
 
 #Import variant information
-qtl_var_info = colocWrapper::importVariantInformation(qtl_var_path)
+varinfo_df = colocWrapper::importVariantInformation(opt$qtl_varinfo)
 print("Variant information imported.")
 
 #Extract sample size from variant info
-sample_size = median(qtl_var_info$AN)/2
-
-#Import list of GWAS studies
-#gwas_stats_labeled = readr::read_tsv(gwas_list, col_names = c("trait","file_name","type"), col_type = "ccc")
+sample_size = median(varinfo_df$AN)/2
 
 #Construct a new QTL list
-qtl_list = colocWrapper::constructQtlmapListForColoc(lead_path = lead_vars, summary_path = summary_path, sample_size)
-
-#Spcecify the location of the GWAS summary stats file
-#gwas_file_name = dplyr::filter(gwas_stats_labeled, trait == gwas_id)$file_name
-#gwas_prefix = file.path(gwas_dir, gwas_file_name)
+qtl_list = colocWrapper::constructQtlmapListForColoc(lead_path = opt$qtl_leads, summary_path = opt$qtl_stats, sample_size)
 
 #Prefilter coloc candidates
 qtl_df_list = colocWrapper::prefilterColocCandidates(qtl_list$min_pvalues, opt$gwas_leads,
-                                       variant_info = qtl_var_info, fdr_thresh = 0.1,
+                                       variant_info = varinfo_df, fdr_thresh = 0.1,
                                        overlap_dist = 1e5, gwas_type = opt$gwas_type)
 qtl_pairs = purrr::map_df(qtl_df_list, identity) %>% unique()
-print("Pre-filtering completed.")
+message("Pre-filtering completed. Number of loci included for colocalisation: ", nrow(qtl_pairs))
 
 #Test for coloc
 coloc_res_list = purrr::map2(qtl_list$qtl_summary_list, qtl_list$sample_sizes,
                              ~colocWrapper::colocMolecularQTLsByRow(qtl_pairs, qtl_summary_path = .x,
                                                       gwas_summary_path = opt$gwas_stats,
-                                                      variant_info = qtl_var_info,
+                                                      variant_info = varinfo_df,
                                                       N_qtl = .y, cis_dist = cis_window, gwas_type = opt$gwas_type))
-print("Coloc completed.")
+message("Coloc completed.")
 
 #Export results
 coloc_hits = purrr::map_df(coloc_res_list, identity) %>%
   dplyr::arrange(-PP.H4.abf) %>%
+  dplyr::select(-.row) %>%
   dplyr::mutate(gwas_trait = gwas_id)
 write.table(coloc_hits, outfile, sep = "\t", quote = FALSE, row.names = FALSE)
-
 
 #Debugging
 if(FALSE){
   colocMolecularQTLs(qtl_pairs, qtl_list$qtl_summary_list$qtl_group, gwas_summary_path = opt$gwas_stats,
-                     variant_info = qtl_var_info, N_qtl = qtl_list$sample_sizes$qtl_group, cis_dist = cis_window,
+                     variant_info = varinfo_df, N_qtl = qtl_list$sample_sizes$qtl_group, cis_dist = cis_window,
                      gwas_type = opt$gwas_type)
 }
