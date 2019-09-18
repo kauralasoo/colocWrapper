@@ -34,7 +34,7 @@ process run_coloc{
     set study, qtl_group, quant_method, file(qtl_leads), file(qtl_stats), file(qtl_stats_index), file(qtl_varinfo), file(gwas_stats), file(gwas_stats_index), file(gwas_leads) from qtl_results_ch.combine(indexed_sumstats)
 
     output:
-    file("${study}.${qtl_group}.${quant_method}.${gwas_stats.basename}.txt") into coloc_results
+    file("${study}.${qtl_group}.${quant_method}.${gwas_stats.baseName}.txt") into coloc_results
 
     script:
     """
@@ -44,7 +44,7 @@ process run_coloc{
      --cis_window ${params.cis_window}\
      --gwas_leads ${gwas_leads}\
      --gwas_stats ${gwas_stats}\
-     --out "${study}.${qtl_group}.${quant_method}.${gwas_stats.basename}.txt"\
+     --out "${study}.${qtl_group}.${quant_method}.${gwas_stats.baseName}.txt"\
      --qtl_varinfo ${qtl_varinfo}\
      --gwas_type ${params.gwas_type}
     """
