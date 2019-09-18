@@ -1,13 +1,13 @@
 //sumstats_file
 Channel.fromPath(params.gwasFile)
-    .ifEmpty { error "Cannot find the sumstats file in: ${params.sumstats}" }
+    .ifEmpty { error "Cannot find the sumstats file in: ${params.gwasFile}" }
     .splitCsv(header: true, sep: '\t', strip: true)
     .map{row -> [ file(row.sumstats_file)]}
     .set { sumstats_channel }
 
 // study	qtl_group	expression_matrix	phenotype_meta	sample_meta	vcf	phenotype_list	covariates
 Channel.fromPath(params.studyFile)
-    .ifEmpty { error "Cannot find any qtl_results file in: ${params.qtl_results}" }
+    .ifEmpty { error "Cannot find any qtl_results file in: ${params.studyFile}" }
     .splitCsv(header: true, sep: '\t', strip: true)
     .map{row -> [ row.study, row.qtl_group, row.quant_method, file(row.qtl_leads), file(row.qtl_stats), file("${row.qtl_stats}.tbi"), file(row.qtl_varinfo)]}
     .set { qtl_results_ch }
