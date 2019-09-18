@@ -5,7 +5,6 @@ suppressPackageStartupMessages(library("coloc"))
 suppressPackageStartupMessages(library("readr"))
 suppressPackageStartupMessages(library("devtools"))
 suppressPackageStartupMessages(library("optparse"))
-devtools::load_all("colocWrapper/")
 
 #Parse command-line options
 option_list <- list(
@@ -24,6 +23,8 @@ option_list <- list(
   make_option(c("--qtl_varinfo"), type="character", default=NULL,
               help="Variant information file for the QTL dataset.", metavar = "type"),
   make_option(c("--gwas_type"), type="character", default=NULL,
+              help="GWAS summary statistics type.", metavar = "type"),
+  make_option(c("--pkg_path"), type="character", default="colocWrapper/",
               help="GWAS summary statistics type.", metavar = "type")
 )
 opt <- parse_args(OptionParser(option_list=option_list))
@@ -37,9 +38,12 @@ if(FALSE){
              gwas_stats = "testdata/27863252-GCST004599-EFO_0004584.tsv.gz",
              qtl_varinfo = "testdata/platelet.variant_information.txt.gz",
              out = "colocalised_hits.txt",
-             gwas_type = "GWASCatalog")
+             gwas_type = "GWASCatalog",
+             pkg_path = "colocWrapper/")
 }
 
+#Load colocWrapper
+devtools::load_all(opt$pkg_path)
 
 #Extract parameters for CMD options
 cis_window = as.numeric(opt$cis_window)

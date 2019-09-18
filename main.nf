@@ -46,6 +46,7 @@ process run_coloc{
      --gwas_stats ${gwas_stats}\
      --out "${study}.${qtl_group}.${quant_method}.${gwas_stats.baseName}.txt"\
      --qtl_varinfo ${qtl_varinfo}\
-     --gwas_type ${params.gwas_type}
+     --gwas_type ${params.gwas_type}\
+     --pkg_path $baseDir/colocWrapper
     """
 }
