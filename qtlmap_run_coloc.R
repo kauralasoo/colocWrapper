@@ -1,10 +1,10 @@
-library("dplyr")
-library("tidyr")
-library("purrr")
-library("coloc")
-library("readr")
-library("devtools")
-library("optparse")
+suppressPackageStartupMessages(library("dplyr"))
+suppressPackageStartupMessages(library("tidyr"))
+suppressPackageStartupMessages(library("purrr"))
+suppressPackageStartupMessages(library("coloc"))
+suppressPackageStartupMessages(library("readr"))
+suppressPackageStartupMessages(library("devtools"))
+suppressPackageStartupMessages(library("optparse"))
 devtools::load_all("colocWrapper/")
 
 #Parse command-line options
