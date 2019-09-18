@@ -51,3 +51,7 @@ process run_coloc{
      --pkg_path $baseDir/colocWrapper
     """
 }
+
+workflow.onComplete { 
+	println ( workflow.success ? "Done!" : "Oops ... something went wrong" )
+}
