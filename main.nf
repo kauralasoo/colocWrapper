@@ -32,7 +32,7 @@ process run_coloc{
 
     input:
     set study, qtl_group, quant_method, file(qtl_leads), file(qtl_stats), file(qtl_stats_index), file(qtl_varinfo) from qtl_results_ch
-    each file(gwas_stats), file(gwas_stats_index), file(gwas_leads) from indexed_sumstats
+    set file(gwas_stats), file(gwas_stats_index), file(gwas_leads) from indexed_sumstats
 
     output:
     file("${study}.${qtl_group}.${quant_method}.${gwas_stats.basename}.txt") into coloc_results
