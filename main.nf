@@ -38,7 +38,7 @@ process run_coloc{
 
     script:
     """
-    Rscript qtlmap_run_coloc.R\
+    Rscript $baseDir/bin/qtlmap_run_coloc.R\
      --qtl_leads ${qtl_leads}\
      --qtl_stats ${qtl_stats}\
      --cis_window ${params.cis_window}\
