@@ -29,7 +29,7 @@ process index_gwas_sumstats{
         """
     } else {
         """
-        tabix -b3 -e3 -s2 --skip-lines 1 ${sumstats.simpleName}.tsv.gz
+        tabix -b3 -e3 -s2 -S1 ${sumstats.simpleName}.tsv.gz
         csvtk filter -t -f 'p_nominal<1e-5' ${sumstats} | gzip > ${sumstats.simpleName}.top_hits.tsv.gz
         """
     }
