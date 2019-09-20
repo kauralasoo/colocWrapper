@@ -2,6 +2,12 @@
 Simple workflow to perform colocalisation analysis between GWAS summary statistics from the GWASCatalog and eQTL summary statistics from the eQTL Catalogue.
 
 ## Example
+Load dependencies
+```bash
+module load nextflow
+module load singularity
+```
+
 For GWAS Catalog summary statistics, please use:
 ```bash
 nextflow run main.nf\
