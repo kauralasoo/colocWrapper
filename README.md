@@ -1,3 +1,5 @@
+Note: This workflow has now been superceded by [eQTL-Catalogue/colocalisation](https://github.com/eQTL-Catalogue/colocalisation).
+
 # colocWrapper
 Simple workflow to perform colocalisation analysis between GWAS summary statistics from the GWASCatalog and eQTL summary statistics from the eQTL Catalogue.
 
